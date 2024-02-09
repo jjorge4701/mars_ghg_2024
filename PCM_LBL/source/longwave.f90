@@ -143,9 +143,9 @@ contains
              ! this was done in setup_shortwave
              
              open(unit=3,file='saved_sigma_data/sigma_'//gas_name(iGas)//'_lw.dat')
-             do iS = 1, nS
-                do iLay = 1, nLay
-                   do iTem = 1,nTem
+              do iS = 1, nS
+                 do iLay = 1, nLay
+                    do iTem = 1,nTem
                       read(3,'(e12.4)') sigma_lw_ar(iS,iLay,iGas,iTem)
                    end do
                 end do

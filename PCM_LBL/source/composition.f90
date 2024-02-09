@@ -43,6 +43,17 @@ module composition
   integer, public, save :: iGas_H2S  = -1
   integer, public, save :: iGas_CH4  = -1
   integer, public, save :: iGas_NH3  = -1
+  integer, public, save :: iGas_H4O  = -1
+  integer, public, save :: iGas_CH8  = -1
+  integer, public, save :: iGas_CH6  = -1
+  integer, public, save :: iGas_N2O  = -1
+  integer, public, save :: iGas_NO2  = -1
+  integer, public, save :: iGas_HBr  = -1
+  integer, public, save :: iGas_OH   = -1
+  integer, public, save :: iGas_OCS  = -1
+  integer, public, save :: iGas_HCN  = -1
+  integer, public, save :: iGas_HNO  = -1
+  integer, public, save :: iGas_HCO  = -1
 
   !------------ compound properties and thermodynamic constants ---------------
   ! data from http://pubchem.ncbi.nlm.nih.gov/ and Principles of Planetary Climate p. 92, Table 2.1.
@@ -53,6 +64,19 @@ module composition
   real(8), parameter :: mu_CH4      = 16.04        ! molar mass of CH4 [g/mol]
   real(8), parameter :: mu_O3       = 48.00        ! molar mass of O3 [g/mol]
   real(8), parameter :: mu_NH3      = 17.031       ! molar mass of NH3 [g/mol]
+  real(8), parameter :: mu_H2O2     = 34.0147      ! molar mass of H2O2 [g/mol]
+  real(8), parameter :: mu_C2H6     = 30.07        ! molar mass of C2H6 [g/mol]
+  real(8), parameter :: mu_C2H4     = 28.05        ! molar mass of C2H4 [g/mol]
+  real(8), parameter :: mu_N2O      = 44.013       ! molar mass of N2O [g/mol]
+  real(8), parameter :: mu_NO2      = 46.0055      ! molar mass of NO2 [g/mol]
+  real(8), parameter :: mu_HBr      = 80.9119      ! molar mass of HBr [g/mol]
+  real(8), parameter :: mu_CO       = 28.01        ! molar mass of CO [g/mol]
+  real(8), parameter :: mu_OH       = 17.008       ! molar mass of OH [g/mol]
+  real(8), parameter :: mu_OCS      = 60.075       ! molar mass of OCS [g/mol]
+  real(8), parameter :: mu_HCN      = 27.0253      ! molar mass of HCN [g/mol]
+  real(8), parameter :: mu_HNO3     = 63.01        ! molar mass of HNO3 [g/mol]
+  real(8), parameter :: mu_H2CO     = 30.031        ! molar mass of H2CO [g/mol]
+
 
   real(8), parameter :: mu_N2       = 28.014       ! molar mass of N2 [g/mol]
   real(8), parameter :: cp_N2       = 1.040        ! constant pressure specific heat of N2 at 300 K [kJ/kg/K]
@@ -80,7 +104,8 @@ module composition
   
   public cp_N2, cp_H2, R_H2O
   public rho_H2O_ice, rho_CO2_ice, rho_dust
-  public mu_CO2, mu_H2O, mu_N2, mu_H2, mu_SO2, mu_H2S, mu_CH4, mu_O3, mu_NH3
+  public mu_CO2, mu_H2O, mu_N2, mu_H2, mu_SO2, mu_H2S, mu_CH4, mu_O3, mu_NH3, mu_H2O2, mu_C2H6, mu_C2H4, mu_N2O, mu_NO2
+  public mu_HBr, mu_CO, mu_OH, mu_OCS, mu_HCN, mu_HNO3, mu_H2CO
 
   real(8), public, save :: T0 ! Triple point temperature of variable gas [K]
   real(8), public, save :: p0 ! Triple point pressure of variable gas [Pa]
@@ -201,6 +226,39 @@ contains
           count=count+1
        elseif (gas_name(iGas)=="NH3") then
           iGas_NH3=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="H4O") then
+	  iGas_H4O=iGas
+	  count=count+1
+       elseif (gas_name(iGas)=="CH8") then
+	  iGas_CH8=iGas
+	  count=count+1
+       elseif (gas_name(iGas)=="CH6") then
+	  iGas_CH6=iGas
+	  count=count+1
+       elseif (gas_name(iGas)=="N2O") then
+          iGas_N2O=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="NO2") then
+          iGas_NO2=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="HBr") then
+          iGas_HBr=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="OH_") then
+          iGas_OH=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="OCS") then
+          iGas_OCS=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="HCN") then
+          iGas_HCN=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="HNO") then
+          iGas_HNO=iGas
+          count=count+1
+       elseif (gas_name(iGas)=="HCO") then
+          iGas_HCO=iGas
           count=count+1
        endif
     enddo

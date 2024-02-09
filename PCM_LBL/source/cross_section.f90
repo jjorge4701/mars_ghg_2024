@@ -9,7 +9,8 @@ module cross_section
   !--------------------------------------------------------
 
   use dimensions, only : nGas, nlinesMAX
-  use composition, only : gas_name,iGas_CO2,iGas_H2O,iGas_CH4,iGas_O3,iGas_SO2,iGas_H2S,iGas_H2,iGas_NH3,iGas_N2
+  use composition, only : gas_name,iGas_CO2,iGas_H2O,iGas_CH4,iGas_O3,iGas_SO2,iGas_H2S,iGas_H2,iGas_NH3,iGas_N2,iGas_H4O, & 
+  iGas_CH8,iGas_CH6,iGas_N2O,iGas_NO2,iGas_HBr,iGas_CO,iGas_OH,iGas_OCS,iGas_HCN,iGas_HNO,iGas_HCO
 
   implicit none
   private
@@ -36,6 +37,10 @@ module cross_section
   real(8) ncoeff(nGas,nlinesMAX)   ! Exponent for pressure broadening T-dependence
   real(8) delta(nGas,nlinesMAX)    ! Air-broadened pressure shift [cm^-1/atm]
 
+ 
+
+
+
   ! functions of temperature
   real(8) gam_lore(nGas,nlinesMAX) ! Lorentz half width [cm^-1 atm^-1]
   real(8) gam_dopp(nGas,nlinesMAX) ! Doppler half width [cm^-1 atm^-1]
@@ -45,6 +50,7 @@ module cross_section
 
   !------- program options --------------  
   logical, parameter :: use_beguier_2015 = .false. ! include Beguier+ JQRST (2015) CH4 data in near-IR?
+  logical, parameter :: CO2_broadening = .false. 
 
 contains
 
@@ -112,7 +118,31 @@ contains
           elseif(iGas==iGas_H2S)then
              open(unit=111,file=trim(datadir)//'HITRAN_H2S.par')
           elseif(iGas==iGas_NH3)then
-             open(unit=111,file=trim(datadir)//'HITRAN_NH3.par')             
+             open(unit=111,file=trim(datadir)//'HITRAN_NH3.par')   
+	  elseif(iGas==iGas_H4O)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_H4O.par')
+          elseif(iGas==iGas_CH8)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_CH8.par')    
+          elseif(iGas==iGas_CH6)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_CH6.par') 
+          elseif(iGas==iGas_N2O)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_N2O.par')
+          elseif(iGas==iGas_NO2)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_NO2.par') 
+          elseif(iGas==iGas_HBr)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_HBr.par') 
+	  elseif(iGas==iGas_CO)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_CO.par') 
+	  elseif(iGas==iGas_OH)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_OH.par') 
+          elseif(iGas==iGas_OCS)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_OCS.par')  
+          elseif(iGas==iGas_HCN)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_HCN.par')  
+          elseif(iGas==iGas_HNO)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_HNO.par')   
+          elseif(iGas==iGas_HCO)then
+	     open(unit=111,file=trim(datadir)//'HITRAN_HCO.par')     
           else
              write(*,*) 'Note: spectral dataset not found for iGas = ',iGas,' .'
           end if
@@ -123,6 +153,7 @@ contains
                 read(111,'(i2, i1, f12.6, 2e10.3, 2f5.4, f10.4, f4.2)',iostat=kk) mol_temp, iso_temp, &
                      nu0_temp, Sref_temp, einstein_temp, gamair_temp, gamself_temp, Egnd_temp, ncoeff_temp!, delta_temp
              else
+            
                 read(111,'(i2, i1, f12.6, 2e10.3, 2f5.4, f10.4, f4.2, f8.2)',iostat=kk) mol_temp, iso_temp, &
                      nu0_temp, Sref_temp, einstein_temp, gamair_temp, gamself_temp, Egnd_temp, ncoeff_temp, delta_temp
              endif
@@ -133,11 +164,31 @@ contains
                 nu0(iGas,il)      = nu0_temp
                 Sref(iGas,il)     = Sref_temp
                 einstein(iGas,il) = einstein_temp
-                gam_air(iGas,il)  = gamair_temp
+
+
+		if (CO2_broadening)then
+
+			if(iGas==iGas_CH4)then
+				gam_air(iGas,il) = 1.33*gamair_temp ! approximate scaling constant between HITRAN CH4 air-broadened coeffs and CO2-broadened coeffs from Lyulin et al 2014
+			elseif(iGas==iGas_H2O)then
+				gam_air(iGas,il) = 1.58*gamair_temp ! average scaling constant between HITRAN H2O air-broadened coeffs and CO2-broadened coeffs from Deichuli et al 2022
+			elseif(iGas==iGas_H4O)then
+				gam_air(iGas,il) = 2*gamair_temp
+                	else
+				 gam_air(iGas,il) = gamair_temp
+
+			endif
+
+		else
+			gam_air(iGas,il)  = gamair_temp
+
+		endif
+
                 gam_self(iGas,il) = gamself_temp
                 Egnd(iGas,il)     = Egnd_temp
                 ncoeff(iGas,il)   = ncoeff_temp
                 delta(iGas,il)    = delta_temp
+		
                 il = il + 1
              endif
 
@@ -241,8 +292,42 @@ contains
           ! robust up to about 1000 K for H2O and CO2
           ! up to 500-600 K for CH4
           ! up to about 350 K for O3
-          if(iGas==iGas_H2O .or. iGas==iGas_CO2 .or. iGas==iGas_O3 .or. iGas==iGas_CH4)then
+          if(iGas==iGas_H2O .or. iGas==iGas_O3 .or. iGas==iGas_CH4 &
+          .or. iGas==iGas_NH3 .or. iGas==iGas_N2O .or. iGas==iGas_H2S &
+          .or. iGas==iGas_NO2 .or. iGas==iGas_HBr .or. iGas==iGas_CO .or. iGas==iGas_OH .or. &
+          iGas==iGas_HCN .or. iGas==iGas_HCO)then
              QrefQ = (Tref/T)**1.5d0
+
+          elseif(iGas==iGas_H4O)then
+	     QrefQ = 51.906 - (0.736*T) + (0.0049*T**2.0d0) - (1.867e-5*(T**3.0d0)) + (4.37e-8*(T**4.0d0)) &
+              - (6.36e-11*(T**5.0d0)) + (5.617e-14*(T**6.0d0)) - (2.749e-17*(T**7.0d0)) + (5.718e-21*(T**8.0d0))
+		! (Tref/T)**2.0d0
+
+	  elseif(iGas==iGas_HNO)then
+	     QrefQ = 51.578 - (0.718*T) + (0.0047*T**2.0d0) - (1.794e-5*(T**3.0d0)) + (4.21e-8*(T**4.0d0)) &
+              - (6.156e-11*(T**5.0d0)) + (5.454e-14*(T**6.0d0)) - (2.678e-17*(T**7.0d0)) + (5.585e-21*(T**8.0d0))
+		! (Tref/T)**2.0d0
+
+	  elseif(iGas==iGas_CH8)then	
+	     QrefQ = 55.45 - (0.769*T) + (0.005*T**2.0d0) - (1.918e-5*(T**3.0d0)) + (4.474e-8*(T**4.0d0)) &
+              - (6.501e-11*(T**5.0d0)) + (5.727e-14*(T**6.0d0)) - (2.798e-17*(T**7.0d0)) + (5.813e-21*(T**8.0d0))
+
+	  elseif(iGas==iGas_CO2)then	
+	     QrefQ = 13.50 - (0.156*T) + (0.000968*T**2.0d0) - (3.613e-6*(T**3.0d0)) + (8.37e-9*(T**4.0d0)) &
+              - (1.217e-11*(T**5.0d0)) + (1.065e-14*(T**6.0d0)) - (5.197e-18*(T**7.0d0)) + (1.078e-21*(T**8.0d0))
+
+	  elseif(iGas==iGas_CH6)then
+	     QrefQ = 36 - (0.499*T) + (0.0033*T**2.0d0) - (1.271e-5*(T**3.0d0)) + (2.982e-8*(T**4.0d0)) &
+              - (4.347e-11*(T**5.0d0)) + (3.838e-14*(T**6.0d0)) - (1.878e-17*(T**7.0d0)) + (3.905e-21*(T**8.0d0))
+
+	  elseif(iGas==iGas_SO2)then
+	     QrefQ = 36.47 - (0.502*T) + (0.0033*T**2.0d0) - (1.262e-5*(T**3.0d0)) + (2.954e-8*(T**4.0d0)) &
+              - (4.302e-11*(T**5.0d0)) + (3.799e-14*(T**6.0d0)) - (1.86e-17*(T**7.0d0)) + (3.87e-21*(T**8.0d0))
+          
+          elseif(iGas==iGas_OCS)then
+	     QrefQ = 15.99 - (0.181*T) + (0.0011*T**2.0d0) - (4.099e-6*(T**3.0d0)) + (9.507e-9*(T**4.0d0)) &
+              - (1.381e-11*(T**5.0d0)) + (1.218e-14*(T**6.0d0)) - (5.964e-18*(T**7.0d0)) + (1.241e-21*(T**8.0d0))
+
           else
              write(*,*) 'Molecule Q(T) needs to be assessed still!'
              stop
@@ -423,18 +508,18 @@ contains
        end do
     end if
 
-    if(iGas==iGas_CH4 .and. iGas_CO2.ne.-1)then ! CO2-CH4 gets called once, for CH4
+   ! if(iGas==iGas_CH4 .and. iGas_CO2.ne.-1)then ! CO2-CH4 gets called once, for CH4
 
-       do iS = 1, nS
-          sigma_temp = 0.0d0
-          if(nu(iS)>10.0d0 .and. nu(iS)<1370.0d0)then
-             !call calculate_cia('N2_CH4',nu(iS),T,p,p*f_i(iGas_CO2),p*f_i(iGas_CH4),sigma_temp,.false.)
+     !  do iS = 1, nS
+      !    sigma_temp = 0.0d0
+      !    if(nu(iS)>10.0d0 .and. nu(iS)<1370.0d0)then
+       !      !call calculate_cia('N2_CH4',nu(iS),T,p,p*f_i(iGas_CO2),p*f_i(iGas_CH4),sigma_temp,.false.)
              !print*,'using N2-CH4 for CO2-CH4!'
-             call calculate_cia('CO2CH4',nu(iS),T,p,p*f_i(iGas_CO2),p*f_i(iGas_CH4),sigma_temp,.false.)
-          end if
-          sigma_CIA(iS) = sigma_temp
-       end do
-    end if
+        !     call calculate_cia('CO2CH4',nu(iS),T,p,p*f_i(iGas_CO2),p*f_i(iGas_CH4),sigma_temp,.false.)
+        !  end if
+        !  sigma_CIA(iS) = sigma_temp
+      ! end do
+  !  end if
 
   end subroutine get_CIA_cross_section
 

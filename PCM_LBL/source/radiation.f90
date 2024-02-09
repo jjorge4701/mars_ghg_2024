@@ -92,11 +92,11 @@ contains
        !call setup_cia('N2_H2_')
        !print*,'Using N2-H2 CIA in place of CO2-H2!'
     endif
-    if(iGas_CO2.ne.-1 .and. iGas_CH4.ne.-1)then
-       call setup_cia('CO2CH4')
+    !if(iGas_CO2.ne.-1 .and. iGas_CH4.ne.-1)then
+     !  call setup_cia('CO2CH4')
        !call setup_cia('N2_CH4')
        !print*,'Using N2-CH4 CIA in place of CO2-CH4!'
-    endif
+   ! endif
     if(iGas_CO2.ne.-1)then
        call setup_cia('CO2CO2')
     endif

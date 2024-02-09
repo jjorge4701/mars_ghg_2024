@@ -84,10 +84,10 @@ contains
        ipair     = 4
        nT(ipair) = 10
        nS(ipair) = 1914
-    elseif(pairtype=='N2_CH4')then
-       ipair     = 5
-       nT(ipair) = 10
-       nS(ipair) = 1407
+    ! elseif(pairtype=='N2_CH4')then
+      ! ipair     = 5
+        !nT(ipair) = 10
+      !  nS(ipair) = 1407
     elseif(pairtype=='CO2H2_')then
        ipair     = 6
        if(use_turbet_data.eqv..true.)then
@@ -97,10 +97,10 @@ contains
          nT(ipair) = 4
          nS(ipair) = 601
        endif
-    elseif(pairtype=='CO2CH4')then
-       ipair     = 7
-       nT(ipair) = 4
-       nS(ipair) = 601
+  !  elseif(pairtype=='CO2CH4')then
+   !    ipair     = 7
+   !    nT(ipair) = 4
+    !   nS(ipair) = 601
     elseif(pairtype=='CO2CO2')then
        ipair     = 8
        nT(ipair) = 7
@@ -126,8 +126,8 @@ contains
        dt_file=trim(datadir)//'cia/N2-N2_2011.cia'
     elseif(ipair==4)then
        dt_file=trim(datadir)//'cia/N2-H2_2011.cia'
-    elseif(ipair==5)then
-       dt_file=trim(datadir)//'cia/N2-CH4_2011.cia'
+    !elseif(ipair==5)then
+      ! dt_file=trim(datadir)//'cia/N2-CH4_2011.cia'
     elseif(ipair==6)then
       if(use_turbet_data)then
          !dt_file=trim(datadir)//'cia/co2-h2_turbet2019_interp.dat'
@@ -135,8 +135,8 @@ contains
       else
          dt_file=trim(datadir)//'cia/CO2-H2_200_250_300_350.cia'
       endif
-    elseif(ipair==7)then
-         dt_file=trim(datadir)//'cia/CH4-CO2_200_250_300_350_new.cia'
+   ! elseif(ipair==7)then
+      ! dt_file=trim(datadir)//'cia/CO2-CH4_2018.cia'
     elseif(ipair==8)then
 
       ! HITRAN 2012 database only includes induced dipole data up to 250 cm^-1
@@ -280,12 +280,12 @@ contains
        ipair     = 3
     elseif(pairtype=='N2_H2_')then
        ipair     = 4
-    elseif(pairtype=='N2_CH4')then
-       ipair     = 5
+    ! elseif(pairtype=='N2_CH4')then
+       ! ipair     = 5
     elseif(pairtype=='CO2H2_')then
        ipair     = 6
-    elseif(pairtype=='CO2CH4')then
-       ipair     = 7
+    ! elseif(pairtype=='CO2CH4')then
+       ! ipair     = 7
     elseif(pairtype=='CO2CO2')then
        ipair     = 8
     else

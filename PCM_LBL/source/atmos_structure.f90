@@ -1,4 +1,4 @@
-  module atmos_structure
+module atmos_structure
 
     !---------------------------------------------------------------------------------
     !  
@@ -60,6 +60,10 @@
       use composition,     only : composition_init
       use composition,     only : iGas_CO2, iGas_N2, iGas_H2, iGas_O3, mu_CO2, mu_N2, mu_H2O, mu_H2, mu_O3
       use composition,     only : iGas_CH4, iGas_SO2, iGas_H2S, iGas_NH3, mu_CH4, mu_SO2, mu_H2S, mu_NH3
+      use composition,     only : iGas_H4O, iGas_CH8, iGas_CH6, mu_H2O2, mu_C2H6, mu_C2H4
+      use composition,     only : iGas_N2O, iGas_NO2, iGas_HBr, iGas_CO, mu_N2O, mu_NO2, mu_HBr, mu_CO
+      use composition,     only : iGas_OH, iGas_OCS, iGas_HCN, iGas_HNO, mu_OH, mu_OCS, mu_HCN, mu_HNO3
+      use composition,     only : iGas_HCO, mu_H2CO
       use thermodynamics,  only : cp_H2O
 
       implicit none
@@ -127,6 +131,18 @@
       if(iGas_SO2/=-1) call set_f_i_mu_i(iGas_SO2,mu_SO2,mu_i(iGas_SO2),f_i(:,iGas_SO2))
       if(iGas_H2S/=-1) call set_f_i_mu_i(iGas_H2S,mu_H2S,mu_i(iGas_H2S),f_i(:,iGas_H2S))
       if(iGas_NH3/=-1) call set_f_i_mu_i(iGas_NH3,mu_NH3,mu_i(iGas_NH3),f_i(:,iGas_NH3))
+      if(iGas_H4O/=-1) call set_f_i_mu_i(iGas_H4O,mu_H2O2,mu_i(iGas_H4O),f_i(:,iGas_H4O))
+      if(iGas_CH8/=-1) call set_f_i_mu_i(iGas_CH8,mu_C2H6,mu_i(iGas_CH8),f_i(:,iGas_CH8))
+      if(iGas_CH6/=-1) call set_f_i_mu_i(iGas_CH6,mu_C2H4,mu_i(iGas_CH6),f_i(:,iGas_CH6))
+      if(iGas_N2O/=-1) call set_f_i_mu_i(iGas_N2O,mu_N2O,mu_i(iGas_N2O),f_i(:,iGas_N2O))
+      if(iGas_NO2/=-1) call set_f_i_mu_i(iGas_NO2,mu_NO2,mu_i(iGas_NO2),f_i(:,iGas_NO2))
+      if(iGas_HBr/=-1) call set_f_i_mu_i(iGas_HBr,mu_HBr,mu_i(iGas_HBr),f_i(:,iGas_HBr))
+      if(iGas_CO/=-1) call set_f_i_mu_i(iGas_CO,mu_CO,mu_i(iGas_CO),f_i(:,iGas_CO))
+      if(iGas_OH/=-1) call set_f_i_mu_i(iGas_OH,mu_OH,mu_i(iGas_OH),f_i(:,iGas_OH))
+      if(iGas_OCS/=-1) call set_f_i_mu_i(iGas_OCS,mu_OCS,mu_i(iGas_OCS),f_i(:,iGas_OCS))
+      if(iGas_HCN/=-1) call set_f_i_mu_i(iGas_HCN,mu_HCN,mu_i(iGas_HCN),f_i(:,iGas_HCN))
+      if(iGas_HNO/=-1) call set_f_i_mu_i(iGas_HNO,mu_HNO3,mu_i(iGas_HNO),f_i(:,iGas_HNO))
+      if(iGas_HCO/=-1) call set_f_i_mu_i(iGas_HCO,mu_H2CO,mu_i(iGas_HCO),f_i(:,iGas_HCO))
 
       ! H2O : not constant!
       ! we only set mu_i here: f_i is done later.

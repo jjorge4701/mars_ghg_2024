@@ -37,12 +37,12 @@ module dimensions
   integer, parameter :: nLev      = nLay+1       ! number of levels
   integer, parameter :: nAng      = 4            ! number of angles to integrate over
   integer, parameter :: nlinesMAX = 3000000      ! maximum number of lines to read
-  integer, parameter :: nS        = 2000         ! spectral resolution (same in sw and lw for now)
-  integer, parameter :: nTem      = 1            ! number of cross-section temperatures at each layer
+  integer, parameter :: nS        = 4000         ! spectral resolution (same in sw and lw for now)
+  integer, parameter :: nTem      = 12           ! number of cross-section temperatures at each layer
   
   ! Set nTem > 1 to calculate results more accurately (runs more slowly)
 
   ! directory containing data needed by the model
-  character(len=200), save :: datadir='/Users/robin/Downloads/mars_redox_2020-master/PCM_LBL/data/'
+  character(len=200), save :: datadir='/Users/jasonjorge/Thesis/Mars_Code/PCM_LBL/data/'
   
 end module dimensions

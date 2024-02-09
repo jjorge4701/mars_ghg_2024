@@ -237,7 +237,7 @@ contains
                 do iLay = 1, nLay
                    do iTem = 1,nTem
                       write(1,'(e12.4)') sigma_sw_ar(iS,iLay,iGas,iTem)
-                   end do
+                  end do
                 end do
                 write(2,*) nu_sw(iS)
              end do
