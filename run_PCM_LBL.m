@@ -1,4 +1,4 @@
-% PCM_LBL.m
+% run_PCM_LBL.m
 
 % This script runs PCM_LBL, a 1D radiative-convective code designed to simulate the climates of diverse planetary atmospheres written by R. Wordsworth (2017-2021) with additional input from F. Ding.
 % It assumes an atmosphere composed of CO2, H2O, and one additional greenhouse gas. Other parameters are set to reflect an early Martian atmosphere. 
