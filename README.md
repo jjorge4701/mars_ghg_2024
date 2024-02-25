@@ -1,6 +1,6 @@
-# mars_redox_2021
+# mars_ghg_2024
 
-A collection of source code and scripts to reproduce the results of Wordsworth et al., 2021, Nature Geoscience.
+A collection of source code and scripts to reproduce the results of Jorge & Wordsworth, 2024, JGR Planets.
 
 PCM_LBL/ contains PCM_LBL, the line-by-line radiative-convective model used to calculation surface temperature as a function of total pressure, H2 content and solar luminosity. More details on the operation of this code are given in the README file in that directory.
 
